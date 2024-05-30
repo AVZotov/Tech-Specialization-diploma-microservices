@@ -1,0 +1,40 @@
+services:
+  postgres-customer:
+    container_name: postgres-customer
+    image: postgres:15.6
+    environment:
+      POSTGRES_USER: alexey
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: customer
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-customer:/var/lib/postgresql/data
+    ports:
+      - 5331:5432
+    networks:
+      - postgres-customer
+    restart: unless-stopped
+
+  postgres-fraud:
+    container_name: postgres-fraud
+    image: postgres:15.6
+    environment:
+      POSTGRES_USER: alexey
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: fraud
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-fraud:/var/lib/postgresql/data
+    ports:
+      - 5332:5432
+    networks:
+      - postgres-fraud
+    restart: unless-stopped
+
+networks:
+  postgres-customer:
+  postgres-fraud:
+
+volumes:
+  postgres-customer:
+  postgres-fraud:
