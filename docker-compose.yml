@@ -31,10 +31,29 @@ services:
       - postgres-fraud
     restart: unless-stopped
 
+  postgres-notification:
+    container_name: postgres-notification
+    image: postgres:15.6
+    environment:
+      POSTGRES_USER: alexey
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: notification
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-notification:/var/lib/postgresql/data
+    ports:
+      - 5333:5432
+    networks:
+      - postgres-notification
+    restart: unless-stopped
+
+
 networks:
   postgres-customer:
   postgres-fraud:
+  postgres-notification:
 
 volumes:
   postgres-customer:
   postgres-fraud:
+  postgres-notification:

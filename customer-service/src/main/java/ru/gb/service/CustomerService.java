@@ -2,10 +2,12 @@ package ru.gb.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import ru.gb.domain.Customer;
 import ru.gb.domain.CustomerRegistrationRequest;
-import ru.gb.domain.FraudCheckResponse;
+import ru.gb.fraud.FraudCheckResponse;
+import ru.gb.fraud.FraudClient;
+import ru.gb.notification.NotificationClient;
+import ru.gb.notification.NotificationRequest;
 import ru.gb.repository.CustomerRepository;
 
 @Service
@@ -13,9 +15,10 @@ import ru.gb.repository.CustomerRepository;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final RestTemplate restTemplate;
+    private final FraudClient fraudClient;
+    private final NotificationClient notificationClient;
 
-    public void registerCustomer(CustomerRegistrationRequest customerRegistrationRequest){
+    public void registerCustomer(CustomerRegistrationRequest customerRegistrationRequest) {
         Customer customer = Customer
                 .builder()
                 .firstName(customerRegistrationRequest.firstName())
@@ -25,15 +28,17 @@ public class CustomerService {
 
         customerRepository.saveAndFlush(customer);
 
-        FraudCheckResponse fraudCheckResponse = restTemplate.getForObject(
-                "http://FRAUD/api/v1/fraud-checks/{customerId}",
-                FraudCheckResponse.class,
-                customer.getId()
-        );
+        FraudCheckResponse fraudCheckResponse = fraudClient.isFraudster(customer.getId());
 
-        assert fraudCheckResponse != null;
-        if (fraudCheckResponse.isFraudster()){
+        if (fraudCheckResponse.isFraudster()) {
             throw new IllegalStateException("requested customer is fraudster");
         }
+
+        notificationClient.sendNotification(new NotificationRequest(
+                        customer.getId(),
+                        customer.getEmail(),
+                        String.format("Hello %s, welcome to notification service", customer.getFirstName())
+                )
+        );
     }
 }
