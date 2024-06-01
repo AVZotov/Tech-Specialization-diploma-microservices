@@ -21,6 +21,7 @@ public class CustomerController {
     public void registerCustomer(
             @RequestBody CustomerRegistrationRequest customerRegistrationRequest){
         log.info("new customer added: {}", customerRegistrationRequest);
+
         customerService.registerCustomer(customerRegistrationRequest);
     }
 }
