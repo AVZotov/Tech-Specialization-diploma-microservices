@@ -2,11 +2,11 @@ package ru.gb.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.gb.configuration.RabbitMqMessageProducer;
 import ru.gb.domain.Customer;
 import ru.gb.domain.CustomerRegistrationRequest;
 import ru.gb.fraud.FraudCheckResponse;
 import ru.gb.fraud.FraudClient;
-import ru.gb.notification.NotificationClient;
 import ru.gb.notification.NotificationRequest;
 import ru.gb.repository.CustomerRepository;
 
@@ -16,7 +16,7 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final FraudClient fraudClient;
-    private final NotificationClient notificationClient;
+    private final RabbitMqMessageProducer rabbitMqMessageProducer;
 
     public void registerCustomer(CustomerRegistrationRequest customerRegistrationRequest) {
         Customer customer = Customer
@@ -34,11 +34,16 @@ public class CustomerService {
             throw new IllegalStateException("requested customer is fraudster");
         }
 
-        notificationClient.sendNotification(new NotificationRequest(
-                        customer.getId(),
-                        customer.getEmail(),
-                        String.format("Hello %s, welcome to notification service", customer.getFirstName())
-                )
+        NotificationRequest notificationRequest = new NotificationRequest(
+                customer.getId(),
+                customer.getEmail(),
+                String.format("Hello %s, welcome to notification service", customer.getFirstName())
+        );
+
+        rabbitMqMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
         );
     }
 }

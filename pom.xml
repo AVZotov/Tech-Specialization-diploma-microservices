@@ -18,6 +18,7 @@
         <module>clients-open-feign</module>
         <module>notification-service</module>
         <module>apigw</module>
+        <module>amqp</module>
     </modules>
 
     <properties>
@@ -72,6 +73,13 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring.boot.maven.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <parameters>true</parameters>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
