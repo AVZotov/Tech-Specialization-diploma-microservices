@@ -11,9 +11,6 @@ eureka:
     register-with-eureka: false
 
 management:
-  tracing:
-    sampling:
-      probability: 1
   zipkin:
     tracing:
       endpoint: http://zipkin:9411/api/v2/spans

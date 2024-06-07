@@ -88,7 +88,7 @@
                     <version>3.4.1</version>
                     <configuration>
                         <from>
-                            <image>eclipse-temurin:17</image>
+                            <image>eclipse-temurin:17.0.11_9-jre-alpine</image>
                             <platforms>
                                 <platform>
                                     <architecture>amd64</architecture>

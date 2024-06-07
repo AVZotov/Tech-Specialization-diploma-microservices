@@ -65,7 +65,6 @@ services:
       - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit disk_free_limit 2147483648
     restart: always
     ports:
-      - 5672:5672
       - 15672:15672
     networks:
       - spring-services-network
@@ -110,6 +109,7 @@ services:
       - eureka-server
       - postgres-customer
       - rabbitmq
+      - apigw
 
   fraud:
     image: fraud-service:latest

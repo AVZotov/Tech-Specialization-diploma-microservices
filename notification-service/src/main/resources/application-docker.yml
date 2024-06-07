@@ -17,7 +17,6 @@ spring:
     show-sql: true
   rabbitmq:
     host: rabbitmq
-    port: 5672
     username: alexey
     password: password
 eureka:
@@ -31,8 +30,6 @@ management:
   zipkin:
     tracing:
       endpoint: http://zipkin:9411/api/v2/spans
-  rabbitmq:
-    adresses: rabbitmq:5672
 
 rabbitmq:
   exchanges:
