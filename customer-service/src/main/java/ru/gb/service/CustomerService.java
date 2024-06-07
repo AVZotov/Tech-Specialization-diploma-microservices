@@ -1,6 +1,8 @@
 package ru.gb.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.gb.configuration.RabbitMqMessageProducer;
 import ru.gb.domain.Customer;
@@ -14,6 +16,7 @@ import ru.gb.repository.CustomerRepository;
 @RequiredArgsConstructor
 public class CustomerService {
 
+    private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
     private final CustomerRepository customerRepository;
     private final FraudClient fraudClient;
     private final RabbitMqMessageProducer rabbitMqMessageProducer;
